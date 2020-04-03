@@ -2,6 +2,8 @@
 
 本文涉及到的xlua知识点都可以在[xlua教程]("https://github.com/Tencent/xLua")找到.我希望通过这篇文章,能够给出一个通用的模板来搭建手游xlua开发环境.环境搭建大致可分为以下几个步骤:
 
+另外本文使用的平台是mac osx
+
 1. 导入xlua
 2. 自定义lualoader
 3. 增删第三方库
@@ -70,10 +72,19 @@ $ ./make_osx_lua53.sh
 ```
 4. 编译成功后,会生成一个xlua.bundle文件,路径为 $ build/plugin_lua53/Plugins, 用这个文件替换掉工程中 Assets/Plugins/xlua.bundle文件即可
 5. IOS的编译和osx类似,只是执行的脚本为 make_ios_lua53.sh
+6. Android编译需要用到Android NDK, 在NDK版本选择的时候, xlua Q&A中给出的解决方案(2019.4.13)用到的版本为android-ndk-r10e, 写这篇文章(2020.4.3)时的最新版本为android-ndk-r21, 所以先尝试使用最新版本,如果失败再尝试android-ndk-r10e版本.
+7. 下载了ndk后需要设置ndk的环境变量
+>- 在terminal输入命令 vim ~/.bash_profile
+>- 在.bash_profile中提行加入 export ANDROID_NDK=/Users/baijun/android-ndk-r10e,保存退出. 注意这里是ndk的根目录
+>- 再在termial输入命令 source ~/.bash_profile, 为ndk添加环境变量
+>- cmd+q退出terminal,再重启terminal
+>- 执行xlua/build下的 make_android_lua53_arm64.sh开始编译
 
-# 先留一个坑给android的编译, 还在下载android studio
+经过测试,r21版本是可以按次流程编译成功的,但是没有再进一步的测试,是否可以顺利打包等等.因为懒.
 
-6. c#侧集成
+后续继续使用官方教程里的r10e版本的ndk
+
+8. c#侧集成
 所有lua的C扩展库都会提供个luaopen_xxx的函数，xxx是动态库的名字，比如lua-rapidjson库该函数是luaopen_rapidjson
 ```cpp
 extern "C" {
